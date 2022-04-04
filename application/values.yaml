@@ -1,0 +1,27 @@
+applicationName: microservices
+application:
+  annotations:
+    lab: helm
+
+backend:
+  replicas: 1
+  image: hasnainzaib/abc
+  imagePullPolicy: IfNotPresent
+  containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 8080
+
+
+frontend:
+  replicas: 1
+  image: hasnainzaib/why
+  imagePullPolicy: IfNotPresent
+  containerPort: 8080
+  env:
+  - name: BACKEND_URL
+    value: microservices-backend:8080 
+  service:
+    port: 8080
+    type: "NodePort"
+    nodePort: 31001

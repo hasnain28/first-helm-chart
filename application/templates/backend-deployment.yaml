@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+{{ include "application-backend.labels" . | indent 4 }}
+{{- if .Values.application.annotations }}
+  annotations:
+{{ toYaml .Values.application.annotations | indent 4 }}
+{{- end }}
+
+  name: {{ template "application.name" . }}-backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+{{ include "application-backend.labels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "application-backend.labels" . | indent 8 }}
+    spec:      
+      containers:
+      - name: {{ template "application.name" . }}-backend
+        image: "{{ .Values.backend.image }}"    
+        imagePullPolicy: {{ .Values.backend.imagePullPolicy }}   
+        ports:
+        - containerPort: {{ .Values.backend.containerPort }}
+          name: tcp

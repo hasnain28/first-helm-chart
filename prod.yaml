@@ -1,0 +1,17 @@
+applicationName: production
+
+backend:
+  replicas: 2
+  image: hasnainzaib/why
+  service:
+    type: ClusterIP
+    port: 9090
+
+frontend:
+  image: hasnainzaib/abc
+  env:
+  - name: BACKEND_URL
+    value: production-backend:9090 
+  replicas: 3
+  service:
+    nodePort: 32002

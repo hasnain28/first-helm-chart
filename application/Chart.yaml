@@ -1,0 +1,7 @@
+apiVersion: v1
+name: application
+description: Helm chart of my application consisting of backend and frontend
+version: 0.0.1
+maintainers:
+- name: Muhammad Hasnain Zaib
+  email: muhammadhasnain0334@gmail.com

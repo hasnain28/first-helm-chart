@@ -1,0 +1,92 @@
+---
+# Source: application/templates/backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservices-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: application
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+# Source: application/templates/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservices-frontend
+spec:
+  type: NodePort
+  selector:
+    app: application
+    tier: frontend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31060
+---
+# Source: application/templates/backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: microservices
+    tier: backend
+  annotations:
+    lab: helm
+
+  name: microservices-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservices
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: microservices
+        tier: backend
+    spec:      
+      containers:
+      - name: microservices-backend
+        image: "hasnainzaib/why"    
+        imagePullPolicy: IfNotPresent   
+        ports:
+        - containerPort: 8080
+          name: tcp
+---
+# Source: application/templates/frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: microservices
+    tier: frontend
+  annotations:
+    lab: helm
+  name: microservices-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservices
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: microservices
+        tier: frontend
+    spec:      
+      containers:
+      - name: microservices-frontend
+        image: "hasnainzaib/abc"
+        imagePullPolicy: IfNotPresent   
+        ports:
+        - containerPort: 8080
+          name: tcp
